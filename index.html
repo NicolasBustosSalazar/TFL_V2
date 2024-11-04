@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <header><h1>MODULACIÓN PSK</h1></header>
+      <div class="control info-card">
+        <input type="text" id="inputTexto" placeholder="Ingresa el texto" />
+        <div class="botones">
+          <button id="btnBinary">Señal</button>
+          <button id="btnPSK">Modulación PSK</button>
+          <button id="btn4PSK">Modulación 4PSK</button>
+          <button id="btn8PSK">Modulación 8PSK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primera gráfica: Representación Binaria -->
+    <div class="chart-wrapper hidden" id="binaryChartWrapper">
+      <h3 class="chart-header">Señal de datos codificada</h3>
+      <div class="chart-container info-card">
+        <canvas id="binaryChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Segunda gráfica: Modulación PSK -->
+    <div class="chart-wrapper hidden" id="pskChartWrapper">
+      <h3 class="chart-header">Modulación PSK</h3>
+      <div class="chart-container info-card">
+        <canvas id="pskChart"></canvas>
+      </div>
+      <div class="info-card">
+        <h2>Información</h2>
+        <div id="psk-tiempo"></div>
+        <!-- Cambiar a psk-tiempo -->
+        
+        <!-- Cambiar a psk-velocidad -->
+      </div>
+    </div>
+
+    <!-- Tercera gráfica: Modulación 4PSK -->
+    <div class="chart-wrapper hidden" id="psk4ChartWrapper">
+      <h3 class="chart-header">Modulación 4PSK</h3>
+      <div class="chart-container info-card">
+        <canvas id="psk4Chart"></canvas>
+      </div>
+      <div class="info-card">
+        <h2>Información</h2>
+        <div id="psk4-tiempo"></div>
+        <!-- Cambiar a psk4-tiempo -->
+        
+        
+      </div>
+    </div>
+
+    <!-- Cuarta gráfica: Modulación 8PSK -->
+    <div class="chart-wrapper hidden" id="psk8ChartWrapper">
+      <h3 class="chart-header">Modulación 8PSK</h3>
+      <div class="chart-container info-card">
+        <canvas id="psk8Chart"></canvas>
+      </div>
+      <div class="info-card">
+        <h2>Información</h2>
+        <div id="psk8-tiempo"></div>
+        <!-- Cambiar a psk8-tiempo -->
+        
+        <!-- Cambiar a psk8-velocidad -->
+      </div>
+    </div>
+  </body>
+</html>
