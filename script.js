@@ -280,7 +280,8 @@ function handleBinaryButton(binaryChart) {
   const binaryString = textToBinary(
     document.getElementById("inputTexto").value
   );
-  const binaryWave = generateBinaryWave(binaryString);
+  let encodedString = hammingEncode(binaryString);
+  const binaryWave = generateBinaryWave(encodedString);
   graficarDatos(binaryChart, binaryWave, []); // Solo grafica la señal binaria
   calcularTiempoModulacion(binaryString, "PSK");
   calcularTiempoModulacion(binaryString, "4PSK");
