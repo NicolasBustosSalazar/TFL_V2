@@ -1,6 +1,52 @@
 const timeStep = 0.01; // Incremento de tiempo para la señal
 const carrierFrequency = 2 * Math.PI; // Frecuencia de la onda portadora
 
+
+//////////
+function hammingEncode(data) {
+  let dataBits = data.split("").map(Number);
+  let encodedBits = [];
+  let parityCount = 0;
+
+  // Determinar el número de bits de paridad necesarios
+  while (Math.pow(2, parityCount) < dataBits.length + parityCount + 1) {
+    parityCount++;
+  }
+
+  // Inicializar el array de bits codificados con espacios para los bits de paridad
+  let totalBits = dataBits.length + parityCount;
+  for (let i = 1, j = 0, k = 0; i <= totalBits; i++) {
+    // Si es posición de bit de paridad, inicialízala en 0 temporalmente
+    if (Math.pow(2, j) === i) {
+      encodedBits.push(0);
+      j++;
+    } else {
+      // Si no es un bit de paridad, copia el bit de datos
+      encodedBits.push(dataBits[k]);
+      k++;
+    }
+  }
+
+  // Calcular los bits de paridad
+  for (let i = 0; i < parityCount; i++) {
+    let parityPosition = Math.pow(2, i);
+    let parity = 0;
+
+    // Verificar bits en posiciones correspondientes a la paridad actual
+    for (let j = 1; j <= totalBits; j++) {
+      if (j & parityPosition && j !== parityPosition) {
+        parity ^= encodedBits[j - 1];
+      }
+    }
+
+    // Colocar el bit de paridad calculado en la posición correspondiente
+    encodedBits[parityPosition - 1] = parity;
+  }
+
+  return encodedBits.join("");
+}
+
+
 // Función para convertir el texto a una cadena binaria
 function textToBinary(text) {
   return text
@@ -18,7 +64,7 @@ function inicializarCanvas(idCanvas) {
       labels: [],
       datasets: [
         {
-          label: "Signal 1",
+          label: "Señal",
           data: [],
           borderColor: "rgba(255, 51, 54, 1)",
           borderWidth: 2,
@@ -26,7 +72,7 @@ function inicializarCanvas(idCanvas) {
           fill: false,
         },
         {
-          label: "Signal 2",
+          label: "Señal Modulada",
           data: [],
           borderColor: "rgba(0, 251, 251, 1)",
           borderWidth: 2,
@@ -167,17 +213,18 @@ function handlePSKButton(pskChart) {
   const binaryString = textToBinary(
     document.getElementById("inputTexto").value
   );
-  const timeData = Array(binaryString.length).fill(0);
+  let encodedString = hammingEncode(binaryString);
+  const timeData = Array(encodedString.length).fill(0);
   const carrierWave = generateCarrierWave(timeData); // Genera la onda portadora
-  const pskWave = generatePSKWave(binaryString, timeData);
-  const tiempoPSK = calcularTiempoModulacion(binaryString, "PSK");
+  const pskWave = generatePSKWave(encodedString, timeData);
+  const tiempoPSK = calcularTiempoModulacion(encodedString, "PSK");
   graficarDatos(pskChart, carrierWave, pskWave); // Grafica tanto la onda portadora como la PSK
   // Actualiza el contenido del div con id "psk-tiempo"
 document.getElementById(
   "psk-tiempo"
 ).innerHTML = `Tiempo de transmisión PSK: ${tiempoPSK.toFixed(
   2
-)} segundos <br> Mensaje: ${binaryString}`;
+)} segundos <br> Mensaje Original: ${binaryString} <br> Hamming: ${encodedString}`;
 
   // Mostrar el gráfico PSK y ocultar los demás
   toggleVisibility("pskChartWrapper");
@@ -188,17 +235,18 @@ function handle4PSKButton(psk4Chart) {
   const binaryString = textToBinary(
     document.getElementById("inputTexto").value
   );
-  const timeData = Array(binaryString.length).fill(0);
+  let encodedString = hammingEncode(binaryString);
+  const timeData = Array(encodedString.length).fill(0);
   const carrierWave = generateCarrierWave(timeData); // Genera la onda portadora
-  const psk4Wave = generate4PSKWave(binaryString, timeData);
-  const tiempo4PSK = calcularTiempoModulacion(binaryString, "4PSK");
+  const psk4Wave = generate4PSKWave(encodedString, timeData);
+  const tiempo4PSK = calcularTiempoModulacion(encodedString, "4PSK");
   graficarDatos(psk4Chart, carrierWave, psk4Wave); // Grafica tanto la onda portadora como la 4PSK
   // Actualiza el contenido del div con id "psk-tiempo"
 document.getElementById(
   "psk4-tiempo"
 ).innerHTML = `Tiempo de transmisión 4PSK: ${tiempo4PSK.toFixed(
   2
-)} segundos <br> Mensaje: ${binaryString}`;
+)} segundos <br> Mensaje Original: ${binaryString} <br> Hamming: ${encodedString}`;
 
 
   // Mostrar el gráfico 4PSK y ocultar los demás
@@ -210,17 +258,18 @@ function handle8PSKButton(psk8Chart) {
   const binaryString = textToBinary(
     document.getElementById("inputTexto").value
   );
-  const timeData = Array(binaryString.length).fill(0);
+  let encodedString = hammingEncode(binaryString);
+  const timeData = Array(encodedString.length).fill(0);
   const carrierWave = generateCarrierWave(timeData); // Genera la onda portadora
-  const psk8Wave = generate8PSKWave(binaryString, timeData);
-  const tiempo8PSK = calcularTiempoModulacion(binaryString, "8PSK");
+  const psk8Wave = generate8PSKWave(encodedString, timeData);
+  const tiempo8PSK = calcularTiempoModulacion(encodedString, "8PSK");
   graficarDatos(psk8Chart, carrierWave, psk8Wave); // Grafica tanto la onda portadora como la 8PSK
   // Actualiza el contenido del div con id "psk-tiempo"
   document.getElementById(
     "psk8-tiempo"
   ).innerHTML = `Tiempo de transmisión 8PSK: ${tiempo8PSK.toFixed(
     2
-  )} segundos <br> Mensaje: ${binaryString}`;
+  )} segundos <br> Mensaje Original: ${binaryString} <br> Hamming: ${encodedString}`;
 
   // Mostrar el gráfico 8PSK y ocultar los demás
   toggleVisibility("psk8ChartWrapper");
