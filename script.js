@@ -218,13 +218,14 @@ function handlePSKButton(pskChart) {
   const carrierWave = generateCarrierWave(timeData); // Genera la onda portadora
   const pskWave = generatePSKWave(encodedString, timeData);
   const tiempoPSK = calcularTiempoModulacion(encodedString, "PSK");
+  const anchoBandaPSK = calcularAnchoBanda(encodedString, "PSK");
   graficarDatos(pskChart, carrierWave, pskWave); // Grafica tanto la onda portadora como la PSK
   // Actualiza el contenido del div con id "psk-tiempo"
 document.getElementById(
   "psk-tiempo"
-).innerHTML = `Tiempo de transmisión PSK: ${tiempoPSK.toFixed(
+).innerHTML = `  Mensaje Original: ${binaryString} <br> Hamming: ${encodedString}<br> Tiempo de transmisión PSK: ${tiempoPSK.toFixed(
   2
-)} segundos <br> Mensaje Original: ${binaryString} <br> Hamming: ${encodedString}`;
+)} segundos<br>Ancho de banda PSK: ${anchoBandaPSK} Hz`;
 
   // Mostrar el gráfico PSK y ocultar los demás
   toggleVisibility("pskChartWrapper");
@@ -240,13 +241,14 @@ function handle4PSKButton(psk4Chart) {
   const carrierWave = generateCarrierWave(timeData); // Genera la onda portadora
   const psk4Wave = generate4PSKWave(encodedString, timeData);
   const tiempo4PSK = calcularTiempoModulacion(encodedString, "4PSK");
+  const anchoBanda4PSK = calcularAnchoBanda(encodedString, "4PSK");
   graficarDatos(psk4Chart, carrierWave, psk4Wave); // Grafica tanto la onda portadora como la 4PSK
   // Actualiza el contenido del div con id "psk-tiempo"
 document.getElementById(
   "psk4-tiempo"
-).innerHTML = `Tiempo de transmisión 4PSK: ${tiempo4PSK.toFixed(
+).innerHTML = `  Mensaje Original: ${binaryString} <br> Hamming: ${encodedString}<br> Tiempo de transmisión 4PSK: ${tiempo4PSK.toFixed(
   2
-)} segundos <br> Mensaje Original: ${binaryString} <br> Hamming: ${encodedString}`;
+)} segundos<br>Ancho de banda 4PSK: ${anchoBanda4PSK} Hz`;
 
 
   // Mostrar el gráfico 4PSK y ocultar los demás
@@ -263,13 +265,14 @@ function handle8PSKButton(psk8Chart) {
   const carrierWave = generateCarrierWave(timeData); // Genera la onda portadora
   const psk8Wave = generate8PSKWave(encodedString, timeData);
   const tiempo8PSK = calcularTiempoModulacion(encodedString, "8PSK");
+  const anchoBanda8PSK = calcularAnchoBanda(encodedString, "8PSK");
   graficarDatos(psk8Chart, carrierWave, psk8Wave); // Grafica tanto la onda portadora como la 8PSK
   // Actualiza el contenido del div con id "psk-tiempo"
   document.getElementById(
     "psk8-tiempo"
-  ).innerHTML = `Tiempo de transmisión 8PSK: ${tiempo8PSK.toFixed(
+  ).innerHTML = ` Mensaje Original: ${binaryString} <br> Hamming: ${encodedString} <br> Tiempo de transmisión 8PSK: ${tiempo8PSK.toFixed(
     2
-  )} segundos <br> Mensaje Original: ${binaryString} <br> Hamming: ${encodedString}`;
+  )} segundos <br>Ancho de banda 8PSK: ${anchoBanda8PSK} Hz`;
 
   // Mostrar el gráfico 8PSK y ocultar los demás
   toggleVisibility("psk8ChartWrapper");
@@ -324,4 +327,26 @@ function calcularTiempoModulacion(binaryString, tipoModulacion) {
     (binaryString.length / bitsPorSimbolo[tipoModulacion]) * tiempoPorBit
   );
   return (binaryString.length / bitsPorSimbolo[tipoModulacion]) * tiempoPorBit;
+}
+
+// Constantes para el ancho de banda
+const simboloTiempo = 0.25; // Duración de un símbolo (ajústalo según tu proyecto)
+
+// Función para calcular el ancho de banda requerido para cada tipo de modulación
+function calcularAnchoBanda(binaryString, tipoModulacion) {
+  const bitsPorSimbolo = {
+    PSK: 1,
+    "4PSK": 2,
+    "8PSK": 3,
+  };
+
+  if (!bitsPorSimbolo[tipoModulacion]) {
+    throw new Error("Tipo de modulación no válido");
+  }
+
+  const simbolosPorSegundo = 1 / simboloTiempo;
+  const anchoBanda = simbolosPorSegundo * bitsPorSimbolo[tipoModulacion];
+
+  console.log(`Ancho de banda requerido para ${tipoModulacion}: ${anchoBanda} Hz`);
+  return anchoBanda;
 }
